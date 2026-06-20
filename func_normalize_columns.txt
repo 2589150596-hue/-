@@ -1,0 +1,489 @@
+=== normalize_columns ===
+varnames: ('df', 'rename_map', 'matched_originals', 'std_name', 'aliases', 'col', 'std_best_ratios', 'candidates', 'sorted_ratios', 'best_match', 'best_ratio', 'second_ratio', 'std_to_sources', 'src', 'dst', 'final_rename', 'sources', 's', 'to_drop', 'sample', 'avg_len', 'has_dispimg')
+names: ('set', 'COLUMN_ALIAS_MAP', 'columns', 'str', 'strip', 'add', 'max', 'sorted', 'items', 'len', 'setdefault', 'append', 'pd', 'Series', 'object', 'fillna', 'rename', 'drop', 'startswith', 'dropna', 'astype', 'mean', 'contains', 'any')
+cellvars: ('col_str',)
+freevars: ()
+
+--- Bytecode ---
+              0 MAKE_CELL               22 (col_str)
+
+110           2 RESUME                   0
+
+112           4 BUILD_MAP                0
+              6 STORE_FAST               1 (rename_map)
+
+113           8 LOAD_GLOBAL              1 (NULL + set)
+             18 CALL                     0
+             26 STORE_FAST               2 (matched_originals)
+
+116          28 LOAD_GLOBAL              2 (COLUMN_ALIAS_MAP)
+             38 GET_ITER
+        >>   40 FOR_ITER                80 (to 204)
+             44 UNPACK_SEQUENCE          2
+             48 STORE_FAST               3 (std_name)
+             50 STORE_FAST               4 (aliases)
+
+117          52 LOAD_FAST                0 (df)
+             54 LOAD_ATTR                4 (columns)
+             74 GET_ITER
+        >>   76 FOR_ITER                60 (to 200)
+             80 STORE_FAST               5 (col)
+
+118          82 LOAD_FAST                5 (col)
+             84 LOAD_FAST                2 (matched_originals)
+             86 CONTAINS_OP              0
+             88 POP_JUMP_IF_FALSE        1 (to 92)
+
+119          90 JUMP_BACKWARD            8 (to 76)
+
+120     >>   92 LOAD_GLOBAL              7 (NULL + str)
+            102 LOAD_FAST                5 (col)
+            104 CALL                     1
+            112 LOAD_ATTR                9 (NULL|self + strip)
+            132 CALL                     0
+            140 STORE_DEREF             22 (col_str)
+
+121         142 LOAD_DEREF              22 (col_str)
+            144 LOAD_FAST                4 (aliases)
+            146 CONTAINS_OP              0
+            148 POP_JUMP_IF_TRUE         1 (to 152)
+            150 JUMP_BACKWARD           38 (to 76)
+
+122     >>  152 LOAD_FAST                3 (std_name)
+            154 LOAD_FAST                1 (rename_map)
+            156 LOAD_FAST                5 (col)
+            158 STORE_SUBSCR
+
+123         162 LOAD_FAST                2 (matched_originals)
+            164 LOAD_ATTR               11 (NULL|self + add)
+            184 LOAD_FAST                5 (col)
+            186 CALL                     1
+            194 POP_TOP
+
+124         196 POP_TOP
+            198 JUMP_BACKWARD           80 (to 40)
+
+117     >>  200 END_FOR
+            202 JUMP_BACKWARD           82 (to 40)
+
+116     >>  204 END_FOR
+
+127         206 LOAD_FAST                0 (df)
+            208 LOAD_ATTR                4 (columns)
+            228 GET_ITER
+        >>  230 FOR_ITER               175 (to 584)
+            234 STORE_FAST               5 (col)
+
+128         236 LOAD_FAST                5 (col)
+            238 LOAD_FAST                2 (matched_originals)
+            240 CONTAINS_OP              0
+            242 POP_JUMP_IF_FALSE        1 (to 246)
+
+129         244 JUMP_BACKWARD            8 (to 230)
+
+130     >>  246 LOAD_GLOBAL              7 (NULL + str)
+            256 LOAD_FAST                5 (col)
+            258 CALL                     1
+            266 LOAD_ATTR                9 (NULL|self + strip)
+            286 CALL                     0
+            294 STORE_DEREF             22 (col_str)
+
+131         296 BUILD_MAP                0
+            298 STORE_FAST               6 (std_best_ratios)
+
+132         300 LOAD_GLOBAL              2 (COLUMN_ALIAS_MAP)
+            310 GET_ITER
+        >>  312 FOR_ITER                34 (to 384)
+            316 UNPACK_SEQUENCE          2
+            320 STORE_FAST               3 (std_name)
+            322 STORE_FAST               4 (aliases)
+
+133         324 LOAD_FAST                3 (std_name)
+            326 BUILD_LIST               1
+            328 LOAD_FAST                4 (aliases)
+            330 BINARY_OP                0 (+)
+            334 STORE_FAST               7 (candidates)
+
+134         336 LOAD_GLOBAL             13 (NULL + max)
+            346 LOAD_CLOSURE            22 (col_str)
+            348 BUILD_TUPLE              1
+            350 LOAD_CONST               1 (<code object <genexpr> at 0x00000245394AD590, file "汇总工具.py", line 134>)
+            352 MAKE_FUNCTION            8 (closure)
+
+135         354 LOAD_FAST                7 (candidates)
+            356 GET_ITER
+
+134         358 CALL                     0
+            366 CALL                     1
+            374 LOAD_FAST                6 (std_best_ratios)
+            376 LOAD_FAST                3 (std_name)
+            378 STORE_SUBSCR
+            382 JUMP_BACKWARD           36 (to 312)
+
+132     >>  384 END_FOR
+
+137         386 LOAD_GLOBAL             15 (NULL + sorted)
+            396 LOAD_FAST                6 (std_best_ratios)
+            398 LOAD_ATTR               17 (NULL|self + items)
+            418 CALL                     0
+            426 LOAD_CONST               2 (<code object <lambda> at 0x00000245396F3020, file "汇总工具.py", line 137>)
+            428 MAKE_FUNCTION            0
+            430 LOAD_CONST               3 (True)
+            432 KW_NAMES                 4 (('key', 'reverse'))
+            434 CALL                     3
+            442 STORE_FAST               8 (sorted_ratios)
+
+138         444 LOAD_FAST                8 (sorted_ratios)
+            446 LOAD_CONST               5 (0)
+            448 BINARY_SUBSCR
+            452 UNPACK_SEQUENCE          2
+            456 STORE_FAST               9 (best_match)
+            458 STORE_FAST              10 (best_ratio)
+
+139         460 LOAD_GLOBAL             19 (NULL + len)
+            470 LOAD_FAST                8 (sorted_ratios)
+            472 CALL                     1
+            480 LOAD_CONST               6 (1)
+            482 COMPARE_OP              68 (>)
+            486 POP_JUMP_IF_FALSE        8 (to 504)
+            488 LOAD_FAST                8 (sorted_ratios)
+            490 LOAD_CONST               6 (1)
+            492 BINARY_SUBSCR
+            496 LOAD_CONST               6 (1)
+            498 BINARY_SUBSCR
+            502 JUMP_FORWARD             1 (to 506)
+        >>  504 LOAD_CONST               5 (0)
+        >>  506 STORE_FAST              11 (second_ratio)
+
+140         508 LOAD_FAST               10 (best_ratio)
+            510 LOAD_CONST               7 (0.6)
+            512 COMPARE_OP              68 (>)
+            516 POP_JUMP_IF_TRUE         1 (to 520)
+            518 JUMP_BACKWARD          145 (to 230)
+        >>  520 LOAD_FAST               10 (best_ratio)
+            522 LOAD_FAST               11 (second_ratio)
+            524 BINARY_OP               10 (-)
+            528 LOAD_CONST               8 (0.15)
+            530 COMPARE_OP              68 (>)
+            534 POP_JUMP_IF_TRUE         1 (to 538)
+            536 JUMP_BACKWARD          154 (to 230)
+
+141     >>  538 LOAD_FAST                9 (best_match)
+            540 LOAD_FAST                1 (rename_map)
+            542 LOAD_FAST                5 (col)
+            544 STORE_SUBSCR
+
+142         548 LOAD_FAST                2 (matched_originals)
+            550 LOAD_ATTR               11 (NULL|self + add)
+            570 LOAD_FAST                5 (col)
+            572 CALL                     1
+            580 POP_TOP
+            582 JUMP_BACKWARD          177 (to 230)
+
+127     >>  584 END_FOR
+
+145         586 LOAD_FAST                1 (rename_map)
+            588 EXTENDED_ARG             1
+            590 POP_JUMP_IF_FALSE      309 (to 1210)
+
+146         592 BUILD_MAP                0
+            594 STORE_FAST              12 (std_to_sources)
+
+147         596 LOAD_FAST                1 (rename_map)
+            598 LOAD_ATTR               17 (NULL|self + items)
+            618 CALL                     0
+            626 GET_ITER
+        >>  628 FOR_ITER                38 (to 708)
+            632 UNPACK_SEQUENCE          2
+            636 STORE_FAST              13 (src)
+            638 STORE_FAST              14 (dst)
+
+148         640 LOAD_FAST               12 (std_to_sources)
+            642 LOAD_ATTR               21 (NULL|self + setdefault)
+            662 LOAD_FAST               14 (dst)
+            664 BUILD_LIST               0
+            666 CALL                     2
+            674 LOAD_ATTR               23 (NULL|self + append)
+            694 LOAD_FAST               13 (src)
+            696 CALL                     1
+            704 POP_TOP
+            706 JUMP_BACKWARD           40 (to 628)
+
+147     >>  708 END_FOR
+
+150         710 BUILD_MAP                0
+            712 STORE_FAST              15 (final_rename)
+
+151         714 LOAD_FAST               12 (std_to_sources)
+            716 LOAD_ATTR               17 (NULL|self + items)
+            736 CALL                     0
+            744 GET_ITER
+        >>  746 FOR_ITER               122 (to 994)
+            750 UNPACK_SEQUENCE          2
+            754 STORE_FAST              14 (dst)
+            756 STORE_FAST              16 (sources)
+
+152         758 LOAD_FAST               14 (dst)
+            760 LOAD_FAST               15 (final_rename)
+            762 LOAD_FAST               16 (sources)
+            764 LOAD_CONST               5 (0)
+            766 BINARY_SUBSCR
+            770 STORE_SUBSCR
+
+153         774 LOAD_GLOBAL             19 (NULL + len)
+            784 LOAD_FAST               16 (sources)
+            786 CALL                     1
+            794 LOAD_CONST               6 (1)
+            796 COMPARE_OP              68 (>)
+            800 POP_JUMP_IF_TRUE         1 (to 804)
+            802 JUMP_BACKWARD           29 (to 746)
+
+154     >>  804 LOAD_FAST               14 (dst)
+            806 LOAD_FAST                0 (df)
+            808 LOAD_ATTR                4 (columns)
+            828 CONTAINS_OP              1
+            830 POP_JUMP_IF_FALSE       29 (to 890)
+
+155         832 LOAD_GLOBAL             25 (NULL + pd)
+            842 LOAD_ATTR               26 (Series)
+            862 LOAD_GLOBAL             28 (object)
+            872 KW_NAMES                 9 (('dtype',))
+            874 CALL                     1
+            882 LOAD_FAST                0 (df)
+            884 LOAD_FAST               14 (dst)
+            886 STORE_SUBSCR
+
+156     >>  890 LOAD_FAST               16 (sources)
+            892 LOAD_CONST               6 (1)
+            894 LOAD_CONST              10 (None)
+            896 BINARY_SLICE
+            898 GET_ITER
+        >>  900 FOR_ITER                43 (to 990)
+            904 STORE_FAST              13 (src)
+
+157         906 LOAD_FAST               13 (src)
+            908 LOAD_FAST                0 (df)
+            910 LOAD_ATTR                4 (columns)
+            930 CONTAINS_OP              0
+            932 POP_JUMP_IF_TRUE         1 (to 936)
+            934 JUMP_BACKWARD           18 (to 900)
+
+158     >>  936 LOAD_FAST                0 (df)
+            938 LOAD_FAST               14 (dst)
+            940 BINARY_SUBSCR
+            944 LOAD_ATTR               31 (NULL|self + fillna)
+            964 LOAD_FAST                0 (df)
+            966 LOAD_FAST               13 (src)
+            968 BINARY_SUBSCR
+            972 CALL                     1
+            980 LOAD_FAST                0 (df)
+            982 LOAD_FAST               14 (dst)
+            984 STORE_SUBSCR
+            988 JUMP_BACKWARD           45 (to 900)
+
+156     >>  990 END_FOR
+            992 JUMP_BACKWARD          124 (to 746)
+
+151     >>  994 END_FOR
+
+160         996 LOAD_FAST                0 (df)
+            998 LOAD_ATTR               33 (NULL|self + rename)
+           1018 LOAD_FAST               15 (final_rename)
+           1020 LOAD_CONST               3 (True)
+           1022 KW_NAMES                11 (('columns', 'inplace'))
+           1024 CALL                     2
+           1032 POP_TOP
+
+161        1034 LOAD_FAST               12 (std_to_sources)
+           1036 LOAD_ATTR               17 (NULL|self + items)
+           1056 CALL                     0
+           1064 GET_ITER
+           1066 LOAD_FAST_AND_CLEAR     14 (dst)
+           1068 LOAD_FAST_AND_CLEAR     16 (sources)
+           1070 LOAD_FAST_AND_CLEAR     17 (s)
+           1072 SWAP                     4
+           1074 BUILD_LIST               0
+           1076 SWAP                     2
+        >> 1078 FOR_ITER                38 (to 1158)
+           1082 UNPACK_SEQUENCE          2
+           1086 STORE_FAST              14 (dst)
+           1088 STORE_FAST              16 (sources)
+           1090 LOAD_FAST               16 (sources)
+           1092 LOAD_CONST               6 (1)
+           1094 LOAD_CONST              10 (None)
+           1096 BINARY_SLICE
+           1098 GET_ITER
+        >> 1100 FOR_ITER                25 (to 1154)
+           1104 STORE_FAST              17 (s)
+           1106 LOAD_FAST               17 (s)
+           1108 LOAD_FAST                0 (df)
+           1110 LOAD_ATTR                4 (columns)
+           1130 CONTAINS_OP              0
+           1132 POP_JUMP_IF_TRUE         1 (to 1136)
+           1134 JUMP_BACKWARD           18 (to 1100)
+        >> 1136 LOAD_FAST               17 (s)
+           1138 LOAD_FAST               14 (dst)
+           1140 COMPARE_OP              55 (!=)
+           1144 POP_JUMP_IF_TRUE         1 (to 1148)
+           1146 JUMP_BACKWARD           24 (to 1100)
+        >> 1148 LOAD_FAST               17 (s)
+           1150 LIST_APPEND              3
+           1152 JUMP_BACKWARD           27 (to 1100)
+        >> 1154 END_FOR
+           1156 JUMP_BACKWARD           40 (to 1078)
+        >> 1158 END_FOR
+           1160 STORE_FAST              18 (to_drop)
+           1162 STORE_FAST              16 (sources)
+           1164 STORE_FAST              14 (dst)
+           1166 STORE_FAST              17 (s)
+
+162        1168 LOAD_FAST               18 (to_drop)
+           1170 POP_JUMP_IF_FALSE       19 (to 1210)
+
+163        1172 LOAD_FAST                0 (df)
+           1174 LOAD_ATTR               35 (NULL|self + drop)
+           1194 LOAD_FAST               18 (to_drop)
+           1196 LOAD_CONST               3 (True)
+           1198 KW_NAMES                11 (('columns', 'inplace'))
+           1200 CALL                     2
+           1208 POP_TOP
+
+166     >> 1210 LOAD_CONST              12 ('商品标题')
+           1212 LOAD_FAST                0 (df)
+           1214 LOAD_ATTR                4 (columns)
+           1234 CONTAINS_OP              1
+           1236 POP_JUMP_IF_FALSE      228 (to 1694)
+
+167        1238 LOAD_FAST                0 (df)
+           1240 LOAD_ATTR                4 (columns)
+           1260 GET_ITER
+        >> 1262 FOR_ITER               213 (to 1692)
+           1266 STORE_FAST               5 (col)
+
+168        1268 LOAD_GLOBAL              7 (NULL + str)
+           1278 LOAD_FAST                5 (col)
+           1280 CALL                     1
+           1288 LOAD_ATTR                9 (NULL|self + strip)
+           1308 CALL                     0
+           1316 STORE_DEREF             22 (col_str)
+
+169        1318 LOAD_DEREF              22 (col_str)
+           1320 LOAD_ATTR               37 (NULL|self + startswith)
+           1340 LOAD_CONST              13 ('Unnamed')
+           1342 CALL                     1
+           1350 POP_JUMP_IF_TRUE         1 (to 1354)
+           1352 JUMP_BACKWARD           46 (to 1262)
+
+170     >> 1354 LOAD_FAST                0 (df)
+           1356 LOAD_FAST                5 (col)
+           1358 BINARY_SUBSCR
+           1362 LOAD_ATTR               39 (NULL|self + dropna)
+           1382 CALL                     0
+           1390 LOAD_ATTR               41 (NULL|self + astype)
+           1410 LOAD_GLOBAL              6 (str)
+           1420 CALL                     1
+           1428 STORE_FAST              19 (sample)
+
+171        1430 LOAD_GLOBAL             19 (NULL + len)
+           1440 LOAD_FAST               19 (sample)
+           1442 CALL                     1
+           1450 LOAD_CONST               5 (0)
+           1452 COMPARE_OP              68 (>)
+           1456 POP_JUMP_IF_TRUE         1 (to 1460)
+           1458 JUMP_BACKWARD           99 (to 1262)
+
+172     >> 1460 LOAD_FAST               19 (sample)
+           1462 LOAD_ATTR                6 (str)
+           1482 LOAD_ATTR               19 (NULL|self + len)
+           1502 CALL                     0
+           1510 LOAD_ATTR               43 (NULL|self + mean)
+           1530 CALL                     0
+           1538 STORE_FAST              20 (avg_len)
+
+173        1540 LOAD_FAST               19 (sample)
+           1542 LOAD_ATTR                6 (str)
+           1562 LOAD_ATTR               45 (NULL|self + contains)
+           1582 LOAD_CONST              14 ('DISPIMG')
+           1584 LOAD_CONST              15 (False)
+           1586 KW_NAMES                16 (('na',))
+           1588 CALL                     2
+           1596 LOAD_ATTR               47 (NULL|self + any)
+           1616 CALL                     0
+           1624 STORE_FAST              21 (has_dispimg)
+
+174        1626 LOAD_FAST               20 (avg_len)
+           1628 LOAD_CONST              17 (20)
+           1630 COMPARE_OP              68 (>)
+           1634 POP_JUMP_IF_TRUE         1 (to 1638)
+           1636 JUMP_BACKWARD          188 (to 1262)
+        >> 1638 LOAD_FAST               21 (has_dispimg)
+           1640 POP_JUMP_IF_FALSE        1 (to 1644)
+           1642 JUMP_BACKWARD          191 (to 1262)
+
+175     >> 1644 LOAD_FAST                0 (df)
+           1646 LOAD_ATTR               33 (NULL|self + rename)
+           1666 LOAD_FAST                5 (col)
+           1668 LOAD_CONST              12 ('商品标题')
+           1670 BUILD_MAP                1
+           1672 LOAD_CONST               3 (True)
+           1674 KW_NAMES                11 (('columns', 'inplace'))
+           1676 CALL                     2
+           1684 POP_TOP
+
+176        1686 POP_TOP
+
+178        1688 LOAD_FAST                0 (df)
+           1690 RETURN_VALUE
+
+167     >> 1692 END_FOR
+
+178     >> 1694 LOAD_FAST                0 (df)
+           1696 RETURN_VALUE
+        >> 1698 SWAP                     2
+           1700 POP_TOP
+
+161        1702 SWAP                     4
+           1704 STORE_FAST              17 (s)
+           1706 STORE_FAST              16 (sources)
+           1708 STORE_FAST              14 (dst)
+           1710 RERAISE                  0
+ExceptionTable:
+  1074 to 1132 -> 1698 [4]
+  1136 to 1144 -> 1698 [4]
+  1148 to 1158 -> 1698 [4]
+
+Disassembly of <code object <genexpr> at 0x00000245394AD590, file "汇总工具.py", line 134>:
+              0 COPY_FREE_VARS           1
+
+134           2 RETURN_GENERATOR
+              4 POP_TOP
+              6 RESUME                   0
+              8 LOAD_FAST                0 (.0)
+
+135     >>   10 FOR_ITER                41 (to 96)
+             14 STORE_FAST               1 (cand)
+             16 LOAD_GLOBAL              1 (NULL + difflib)
+             26 LOAD_ATTR                2 (SequenceMatcher)
+             46 LOAD_CONST               0 (None)
+             48 LOAD_DEREF               2 (col_str)
+             50 LOAD_FAST                1 (cand)
+             52 CALL                     3
+             60 LOAD_ATTR                5 (NULL|self + ratio)
+             80 CALL                     0
+             88 YIELD_VALUE              1
+             90 RESUME                   1
+             92 POP_TOP
+             94 JUMP_BACKWARD           43 (to 10)
+        >>   96 END_FOR
+             98 RETURN_CONST             0 (None)
+        >>  100 CALL_INTRINSIC_1         3 (INTRINSIC_STOPITERATION_ERROR)
+            102 RERAISE                  1
+ExceptionTable:
+  6 to 98 -> 100 [0] lasti
+
+Disassembly of <code object <lambda> at 0x00000245396F3020, file "汇总工具.py", line 137>:
+137           0 RESUME                   0
+              2 LOAD_FAST                0 (x)
+              4 LOAD_CONST               1 (1)
+              6 BINARY_SUBSCR
+             10 RETURN_VALUE

@@ -1,0 +1,27 @@
+# Build outputs
+dist/
+build/
+__pycache__/
+*.pyc
+*.pyo
+
+# Extracted/compiled files
+汇总工具.exe_extracted/
+
+# External tools (not project code)
+get-pip.py
+pyinstxtractor.py
+
+# Output files
+统计结果.xlsx
+统计结果_预览.txt
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+Desktop.ini

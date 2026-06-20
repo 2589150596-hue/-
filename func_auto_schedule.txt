@@ -1,0 +1,615 @@
+=== auto_schedule ===
+varnames: ('start_time_str', 'end_time_str', 'shop_orders', 'num_workers', 'min_interval', 'sh', 'sm', 'eh', 'em', 'T', 'shop_ideal', 'shop', 'count', 'interval', 'times', 'i', 't', 'needed', 'all_orders', '_', 'workers', 'order', 'ideal', 'best_w', 'best_score', 'best_actual', 'w_idx', 's', 'same_shop_times', 'last_same', 'earliest', 'future_times', 'gaps', 'variance', 'deviation', 'workload', 'score', 'result', 'orders')
+names: ('map', 'int', 'split', 'ValueError', 'items', 'range', 'max', 'append', 'print', 'sort', 'float', 'sorted', 'len', 'sum', 'abs', 'enumerate', 'round')
+cellvars: ('avg_gap',)
+freevars: ()
+
+--- Bytecode ---
+              0 MAKE_CELL               39 (avg_gap)
+
+180           2 RESUME                   0
+
+186           4 LOAD_GLOBAL              1 (NULL + map)
+             14 LOAD_GLOBAL              2 (int)
+             24 LOAD_FAST                0 (start_time_str)
+             26 LOAD_ATTR                5 (NULL|self + split)
+             46 LOAD_CONST               1 (':')
+             48 CALL                     1
+             56 CALL                     2
+             64 UNPACK_SEQUENCE          2
+             68 STORE_FAST               5 (sh)
+             70 STORE_FAST               6 (sm)
+
+187          72 LOAD_GLOBAL              1 (NULL + map)
+             82 LOAD_GLOBAL              2 (int)
+             92 LOAD_FAST                1 (end_time_str)
+             94 LOAD_ATTR                5 (NULL|self + split)
+            114 LOAD_CONST               1 (':')
+            116 CALL                     1
+            124 CALL                     2
+            132 UNPACK_SEQUENCE          2
+            136 STORE_FAST               7 (eh)
+            138 STORE_FAST               8 (em)
+
+188         140 LOAD_FAST                7 (eh)
+            142 LOAD_CONST               2 (60)
+            144 BINARY_OP                5 (*)
+            148 LOAD_FAST                8 (em)
+            150 BINARY_OP                0 (+)
+            154 LOAD_FAST                5 (sh)
+            156 LOAD_CONST               2 (60)
+            158 BINARY_OP                5 (*)
+            162 LOAD_FAST                6 (sm)
+            164 BINARY_OP                0 (+)
+            168 BINARY_OP               10 (-)
+            172 STORE_FAST               9 (T)
+
+189         174 LOAD_FAST                9 (T)
+            176 LOAD_CONST               3 (0)
+            178 COMPARE_OP              26 (<=)
+            182 POP_JUMP_IF_FALSE       11 (to 206)
+
+190         184 LOAD_GLOBAL              7 (NULL + ValueError)
+            194 LOAD_CONST               4 ('结束时间必须晚于开始时间')
+            196 CALL                     1
+            204 RAISE_VARARGS            1
+
+193     >>  206 BUILD_MAP                0
+            208 STORE_FAST              10 (shop_ideal)
+
+194         210 LOAD_FAST                2 (shop_orders)
+            212 LOAD_ATTR                9 (NULL|self + items)
+            232 CALL                     0
+            240 GET_ITER
+        >>  242 FOR_ITER               119 (to 484)
+            246 UNPACK_SEQUENCE          2
+            250 STORE_FAST              11 (shop)
+            252 STORE_FAST              12 (count)
+
+195         254 LOAD_FAST               12 (count)
+            256 LOAD_CONST               3 (0)
+            258 COMPARE_OP              26 (<=)
+            262 POP_JUMP_IF_FALSE        1 (to 266)
+
+196         264 JUMP_BACKWARD           12 (to 242)
+
+197     >>  266 LOAD_FAST                9 (T)
+            268 LOAD_FAST               12 (count)
+            270 BINARY_OP               11 (/)
+            274 STORE_FAST              13 (interval)
+
+198         276 BUILD_LIST               0
+            278 STORE_FAST              14 (times)
+
+199         280 LOAD_GLOBAL             11 (NULL + range)
+            290 LOAD_FAST               12 (count)
+            292 CALL                     1
+            300 GET_ITER
+        >>  302 FOR_ITER                47 (to 400)
+            306 STORE_FAST              15 (i)
+
+200         308 LOAD_FAST               15 (i)
+            310 LOAD_FAST               13 (interval)
+            312 BINARY_OP                5 (*)
+            316 STORE_FAST              16 (t)
+
+201         318 LOAD_FAST               15 (i)
+            320 LOAD_CONST               3 (0)
+            322 COMPARE_OP              68 (>)
+            326 POP_JUMP_IF_FALSE       18 (to 364)
+
+202         328 LOAD_GLOBAL             13 (NULL + max)
+            338 LOAD_FAST               16 (t)
+            340 LOAD_FAST               14 (times)
+            342 LOAD_CONST               5 (-1)
+            344 BINARY_SUBSCR
+            348 LOAD_FAST                4 (min_interval)
+            350 BINARY_OP                0 (+)
+            354 CALL                     2
+            362 STORE_FAST              16 (t)
+
+203     >>  364 LOAD_FAST               14 (times)
+            366 LOAD_ATTR               15 (NULL|self + append)
+            386 LOAD_FAST               16 (t)
+            388 CALL                     1
+            396 POP_TOP
+            398 JUMP_BACKWARD           49 (to 302)
+
+199     >>  400 END_FOR
+
+204         402 LOAD_FAST               14 (times)
+            404 LOAD_FAST               10 (shop_ideal)
+            406 LOAD_FAST               11 (shop)
+            408 STORE_SUBSCR
+
+205         412 LOAD_FAST               12 (count)
+            414 LOAD_CONST               6 (1)
+            416 BINARY_OP               10 (-)
+            420 LOAD_FAST                4 (min_interval)
+            422 BINARY_OP                5 (*)
+            426 STORE_FAST              17 (needed)
+
+206         428 LOAD_FAST               17 (needed)
+            430 LOAD_FAST                9 (T)
+            432 COMPARE_OP              68 (>)
+            436 POP_JUMP_IF_TRUE         1 (to 440)
+            438 JUMP_BACKWARD           99 (to 242)
+
+207     >>  440 LOAD_GLOBAL             17 (NULL + print)
+            450 LOAD_CONST               7 ('  警告: [')
+            452 LOAD_FAST               11 (shop)
+            454 FORMAT_VALUE             0
+            456 LOAD_CONST               8 ('] 需要至少 ')
+            458 LOAD_FAST               17 (needed)
+            460 FORMAT_VALUE             0
+            462 LOAD_CONST               9 (' 分钟才能满足最小间隔，但工作时段仅 ')
+            464 LOAD_FAST                9 (T)
+            466 FORMAT_VALUE             0
+            468 LOAD_CONST              10 (' 分钟')
+            470 BUILD_STRING             7
+            472 CALL                     1
+            480 POP_TOP
+            482 JUMP_BACKWARD          121 (to 242)
+
+194     >>  484 END_FOR
+
+210         486 BUILD_LIST               0
+            488 STORE_FAST              18 (all_orders)
+
+211         490 LOAD_FAST               10 (shop_ideal)
+            492 LOAD_ATTR                9 (NULL|self + items)
+            512 CALL                     0
+            520 GET_ITER
+        >>  522 FOR_ITER                32 (to 590)
+            526 UNPACK_SEQUENCE          2
+            530 STORE_FAST              11 (shop)
+            532 STORE_FAST              14 (times)
+
+212         534 LOAD_FAST               14 (times)
+            536 GET_ITER
+        >>  538 FOR_ITER                22 (to 586)
+            542 STORE_FAST              16 (t)
+
+213         544 LOAD_FAST               18 (all_orders)
+            546 LOAD_ATTR               15 (NULL|self + append)
+            566 LOAD_FAST               11 (shop)
+            568 LOAD_FAST               16 (t)
+            570 LOAD_CONST              11 (('店铺', '理想时间'))
+            572 BUILD_CONST_KEY_MAP      2
+            574 CALL                     1
+            582 POP_TOP
+            584 JUMP_BACKWARD           24 (to 538)
+
+212     >>  586 END_FOR
+            588 JUMP_BACKWARD           34 (to 522)
+
+211     >>  590 END_FOR
+
+214         592 LOAD_FAST               18 (all_orders)
+            594 LOAD_ATTR               19 (NULL|self + sort)
+            614 LOAD_CONST              12 (<code object <lambda> at 0x00000245396F23F0, file "汇总工具.py", line 214>)
+            616 MAKE_FUNCTION            0
+            618 KW_NAMES                13 (('key',))
+            620 CALL                     1
+            628 POP_TOP
+
+217         630 LOAD_GLOBAL             11 (NULL + range)
+            640 LOAD_FAST                3 (num_workers)
+            642 CALL                     1
+            650 GET_ITER
+            652 LOAD_FAST_AND_CLEAR     19 (_)
+            654 SWAP                     2
+            656 BUILD_LIST               0
+            658 SWAP                     2
+        >>  660 FOR_ITER                 4 (to 672)
+            664 STORE_FAST              19 (_)
+            666 BUILD_LIST               0
+            668 LIST_APPEND              2
+            670 JUMP_BACKWARD            6 (to 660)
+        >>  672 END_FOR
+            674 STORE_FAST              20 (workers)
+            676 STORE_FAST              19 (_)
+
+220         678 LOAD_FAST               18 (all_orders)
+            680 GET_ITER
+        >>  682 EXTENDED_ARG             1
+            684 FOR_ITER               395 (to 1478)
+            688 STORE_FAST              21 (order)
+
+221         690 LOAD_FAST               21 (order)
+            692 LOAD_CONST              14 ('店铺')
+            694 BINARY_SUBSCR
+            698 STORE_FAST              11 (shop)
+
+222         700 LOAD_FAST               21 (order)
+            702 LOAD_CONST              15 ('理想时间')
+            704 BINARY_SUBSCR
+            708 STORE_FAST              22 (ideal)
+
+224         710 LOAD_CONST               3 (0)
+            712 STORE_FAST              23 (best_w)
+
+225         714 LOAD_GLOBAL             21 (NULL + float)
+            724 LOAD_CONST              16 ('inf')
+            726 CALL                     1
+            734 STORE_FAST              24 (best_score)
+
+226         736 LOAD_FAST               22 (ideal)
+            738 STORE_FAST              25 (best_actual)
+
+228         740 LOAD_GLOBAL             11 (NULL + range)
+            750 LOAD_FAST                3 (num_workers)
+            752 CALL                     1
+            760 GET_ITER
+        >>  762 EXTENDED_ARG             1
+            764 FOR_ITER               314 (to 1396)
+            768 STORE_FAST              26 (w_idx)
+
+229         770 LOAD_FAST               20 (workers)
+            772 LOAD_FAST               26 (w_idx)
+            774 BINARY_SUBSCR
+            778 GET_ITER
+            780 LOAD_FAST_AND_CLEAR     27 (s)
+            782 LOAD_FAST_AND_CLEAR     16 (t)
+            784 SWAP                     3
+            786 BUILD_LIST               0
+            788 SWAP                     2
+        >>  790 FOR_ITER                13 (to 820)
+            794 UNPACK_SEQUENCE          2
+            798 STORE_FAST              27 (s)
+            800 STORE_FAST              16 (t)
+            802 LOAD_FAST               27 (s)
+            804 LOAD_FAST               11 (shop)
+            806 COMPARE_OP              40 (==)
+            810 POP_JUMP_IF_TRUE         1 (to 814)
+            812 JUMP_BACKWARD           12 (to 790)
+        >>  814 LOAD_FAST               16 (t)
+            816 LIST_APPEND              2
+            818 JUMP_BACKWARD           15 (to 790)
+        >>  820 END_FOR
+            822 STORE_FAST              28 (same_shop_times)
+            824 STORE_FAST              27 (s)
+            826 STORE_FAST              16 (t)
+
+230         828 LOAD_FAST               28 (same_shop_times)
+            830 POP_JUMP_IF_FALSE       11 (to 854)
+            832 LOAD_GLOBAL             13 (NULL + max)
+            842 LOAD_FAST               28 (same_shop_times)
+            844 CALL                     1
+            852 JUMP_FORWARD            11 (to 876)
+        >>  854 LOAD_GLOBAL             21 (NULL + float)
+            864 LOAD_CONST              16 ('inf')
+            866 CALL                     1
+            874 UNARY_NEGATIVE
+        >>  876 STORE_FAST              29 (last_same)
+
+231         878 LOAD_FAST               28 (same_shop_times)
+            880 POP_JUMP_IF_FALSE       15 (to 912)
+            882 LOAD_GLOBAL             13 (NULL + max)
+            892 LOAD_FAST               22 (ideal)
+            894 LOAD_FAST               29 (last_same)
+            896 LOAD_FAST                4 (min_interval)
+            898 BINARY_OP                0 (+)
+            902 CALL                     2
+            910 JUMP_FORWARD             1 (to 914)
+        >>  912 LOAD_FAST               22 (ideal)
+        >>  914 STORE_FAST              30 (earliest)
+
+233         916 LOAD_FAST               30 (earliest)
+            918 LOAD_FAST                9 (T)
+            920 COMPARE_OP              68 (>)
+            924 POP_JUMP_IF_FALSE       11 (to 948)
+
+234         926 LOAD_FAST                9 (T)
+            928 STORE_FAST              30 (earliest)
+
+235         930 LOAD_FAST               29 (last_same)
+            932 LOAD_FAST                4 (min_interval)
+            934 BINARY_OP                0 (+)
+            938 LOAD_FAST                9 (T)
+            940 COMPARE_OP              68 (>)
+            944 POP_JUMP_IF_FALSE        1 (to 948)
+
+236         946 JUMP_BACKWARD           93 (to 762)
+
+238     >>  948 LOAD_GLOBAL             23 (NULL + sorted)
+            958 LOAD_FAST               20 (workers)
+            960 LOAD_FAST               26 (w_idx)
+            962 BINARY_SUBSCR
+            966 GET_ITER
+            968 LOAD_FAST_AND_CLEAR     27 (s)
+            970 LOAD_FAST_AND_CLEAR     16 (t)
+            972 SWAP                     3
+            974 BUILD_LIST               0
+            976 SWAP                     2
+        >>  978 FOR_ITER                 7 (to 996)
+            982 UNPACK_SEQUENCE          2
+            986 STORE_FAST              27 (s)
+            988 STORE_FAST              16 (t)
+            990 LOAD_FAST               16 (t)
+            992 LIST_APPEND              2
+            994 JUMP_BACKWARD            9 (to 978)
+        >>  996 END_FOR
+            998 SWAP                     3
+           1000 STORE_FAST              16 (t)
+           1002 STORE_FAST              27 (s)
+           1004 LOAD_FAST               30 (earliest)
+           1006 BUILD_LIST               1
+           1008 BINARY_OP                0 (+)
+           1012 CALL                     1
+           1020 STORE_FAST              31 (future_times)
+
+239        1022 LOAD_GLOBAL             25 (NULL + len)
+           1032 LOAD_FAST               31 (future_times)
+           1034 CALL                     1
+           1042 LOAD_CONST              17 (2)
+           1044 COMPARE_OP              92 (>=)
+           1048 POP_JUMP_IF_FALSE      111 (to 1272)
+
+240        1050 LOAD_GLOBAL             11 (NULL + range)
+           1060 LOAD_GLOBAL             25 (NULL + len)
+           1070 LOAD_FAST               31 (future_times)
+           1072 CALL                     1
+           1080 LOAD_CONST               6 (1)
+           1082 BINARY_OP               10 (-)
+           1086 CALL                     1
+           1094 GET_ITER
+           1096 LOAD_FAST_AND_CLEAR     15 (i)
+           1098 SWAP                     2
+           1100 BUILD_LIST               0
+           1102 SWAP                     2
+        >> 1104 FOR_ITER                16 (to 1140)
+           1108 STORE_FAST              15 (i)
+           1110 LOAD_FAST               31 (future_times)
+           1112 LOAD_FAST               15 (i)
+           1114 LOAD_CONST               6 (1)
+           1116 BINARY_OP                0 (+)
+           1120 BINARY_SUBSCR
+           1124 LOAD_FAST               31 (future_times)
+           1126 LOAD_FAST               15 (i)
+           1128 BINARY_SUBSCR
+           1132 BINARY_OP               10 (-)
+           1136 LIST_APPEND              2
+           1138 JUMP_BACKWARD           18 (to 1104)
+        >> 1140 END_FOR
+           1142 STORE_FAST              32 (gaps)
+           1144 STORE_FAST              15 (i)
+
+241        1146 LOAD_GLOBAL             27 (NULL + sum)
+           1156 LOAD_FAST               32 (gaps)
+           1158 CALL                     1
+           1166 LOAD_GLOBAL             25 (NULL + len)
+           1176 LOAD_FAST               32 (gaps)
+           1178 CALL                     1
+           1186 BINARY_OP               11 (/)
+           1190 STORE_DEREF             39 (avg_gap)
+
+242        1192 LOAD_DEREF              39 (avg_gap)
+           1194 LOAD_CONST               3 (0)
+           1196 COMPARE_OP              68 (>)
+           1200 POP_JUMP_IF_FALSE       32 (to 1266)
+           1202 LOAD_GLOBAL             27 (NULL + sum)
+           1212 LOAD_CLOSURE            39 (avg_gap)
+           1214 BUILD_TUPLE              1
+           1216 LOAD_CONST              18 (<code object <genexpr> at 0x00000245396FC4E0, file "汇总工具.py", line 242>)
+           1218 MAKE_FUNCTION            8 (closure)
+           1220 LOAD_FAST               32 (gaps)
+           1222 GET_ITER
+           1224 CALL                     0
+           1232 CALL                     1
+           1240 LOAD_GLOBAL             25 (NULL + len)
+           1250 LOAD_FAST               32 (gaps)
+           1252 CALL                     1
+           1260 BINARY_OP               11 (/)
+           1264 JUMP_FORWARD             1 (to 1268)
+        >> 1266 LOAD_CONST               3 (0)
+        >> 1268 STORE_FAST              33 (variance)
+           1270 JUMP_FORWARD             2 (to 1276)
+
+244     >> 1272 LOAD_CONST               3 (0)
+           1274 STORE_FAST              33 (variance)
+
+246     >> 1276 LOAD_GLOBAL             29 (NULL + abs)
+           1286 LOAD_FAST               30 (earliest)
+           1288 LOAD_FAST               22 (ideal)
+           1290 BINARY_OP               10 (-)
+           1294 CALL                     1
+           1302 STORE_FAST              34 (deviation)
+
+247        1304 LOAD_GLOBAL             25 (NULL + len)
+           1314 LOAD_FAST               20 (workers)
+           1316 LOAD_FAST               26 (w_idx)
+           1318 BINARY_SUBSCR
+           1322 CALL                     1
+           1330 STORE_FAST              35 (workload)
+
+248        1332 LOAD_FAST               34 (deviation)
+           1334 LOAD_CONST              17 (2)
+           1336 BINARY_OP                5 (*)
+           1340 LOAD_FAST               33 (variance)
+           1342 LOAD_CONST              19 (0.05)
+           1344 BINARY_OP                5 (*)
+           1348 BINARY_OP                0 (+)
+           1352 LOAD_FAST               35 (workload)
+           1354 LOAD_CONST              20 (1.5)
+           1356 BINARY_OP                5 (*)
+           1360 BINARY_OP                0 (+)
+           1364 STORE_FAST              36 (score)
+
+250        1366 LOAD_FAST               36 (score)
+           1368 LOAD_FAST               24 (best_score)
+           1370 COMPARE_OP               2 (<)
+           1374 POP_JUMP_IF_TRUE         2 (to 1380)
+           1376 EXTENDED_ARG             1
+           1378 JUMP_BACKWARD          309 (to 762)
+
+251     >> 1380 LOAD_FAST               36 (score)
+           1382 STORE_FAST              24 (best_score)
+
+252        1384 LOAD_FAST               26 (w_idx)
+           1386 STORE_FAST              23 (best_w)
+
+253        1388 LOAD_FAST               30 (earliest)
+           1390 STORE_FAST              25 (best_actual)
+           1392 EXTENDED_ARG             1
+           1394 JUMP_BACKWARD          317 (to 762)
+
+228     >> 1396 END_FOR
+
+255        1398 LOAD_FAST               20 (workers)
+           1400 LOAD_FAST               23 (best_w)
+           1402 BINARY_SUBSCR
+           1406 LOAD_ATTR               15 (NULL|self + append)
+           1426 LOAD_FAST               11 (shop)
+           1428 LOAD_FAST               25 (best_actual)
+           1430 BUILD_TUPLE              2
+           1432 CALL                     1
+           1440 POP_TOP
+
+256        1442 LOAD_FAST               25 (best_actual)
+           1444 LOAD_FAST               21 (order)
+           1446 LOAD_CONST              21 ('实际时间')
+           1448 STORE_SUBSCR
+
+257        1452 LOAD_CONST              22 ('刷手')
+           1454 LOAD_FAST               23 (best_w)
+           1456 LOAD_CONST               6 (1)
+           1458 BINARY_OP                0 (+)
+           1462 FORMAT_VALUE             0
+           1464 BUILD_STRING             2
+           1466 LOAD_FAST               21 (order)
+           1468 LOAD_CONST              22 ('刷手')
+           1470 STORE_SUBSCR
+           1474 EXTENDED_ARG             1
+           1476 JUMP_BACKWARD          398 (to 682)
+
+220     >> 1478 END_FOR
+
+260        1480 BUILD_LIST               0
+           1482 STORE_FAST              37 (result)
+
+261        1484 LOAD_GLOBAL             31 (NULL + enumerate)
+           1494 LOAD_FAST               20 (workers)
+           1496 CALL                     1
+           1504 GET_ITER
+        >> 1506 FOR_ITER                52 (to 1614)
+           1510 UNPACK_SEQUENCE          2
+           1514 STORE_FAST              26 (w_idx)
+           1516 STORE_FAST              38 (orders)
+
+262        1518 LOAD_FAST               38 (orders)
+           1520 GET_ITER
+        >> 1522 FOR_ITER                42 (to 1610)
+           1526 UNPACK_SEQUENCE          2
+           1530 STORE_FAST              11 (shop)
+           1532 STORE_FAST              16 (t)
+
+263        1534 LOAD_FAST               37 (result)
+           1536 LOAD_ATTR               15 (NULL|self + append)
+           1556 LOAD_FAST               11 (shop)
+           1558 LOAD_GLOBAL             33 (NULL + round)
+           1568 LOAD_FAST               16 (t)
+           1570 LOAD_CONST               6 (1)
+           1572 CALL                     2
+           1580 LOAD_CONST              22 ('刷手')
+           1582 LOAD_FAST               26 (w_idx)
+           1584 LOAD_CONST               6 (1)
+           1586 BINARY_OP                0 (+)
+           1590 FORMAT_VALUE             0
+           1592 BUILD_STRING             2
+           1594 LOAD_CONST              23 (('店铺', '时间分钟', '刷手'))
+           1596 BUILD_CONST_KEY_MAP      3
+           1598 CALL                     1
+           1606 POP_TOP
+           1608 JUMP_BACKWARD           44 (to 1522)
+
+262     >> 1610 END_FOR
+           1612 JUMP_BACKWARD           54 (to 1506)
+
+261     >> 1614 END_FOR
+
+264        1616 LOAD_FAST               37 (result)
+           1618 LOAD_ATTR               19 (NULL|self + sort)
+           1638 LOAD_CONST              24 (<code object <lambda> at 0x00000245396A1DF0, file "汇总工具.py", line 264>)
+           1640 MAKE_FUNCTION            0
+           1642 KW_NAMES                13 (('key',))
+           1644 CALL                     1
+           1652 POP_TOP
+
+265        1654 LOAD_FAST               37 (result)
+           1656 RETURN_VALUE
+        >> 1658 SWAP                     2
+           1660 POP_TOP
+
+217        1662 SWAP                     2
+           1664 STORE_FAST              19 (_)
+           1666 RERAISE                  0
+        >> 1668 SWAP                     2
+           1670 POP_TOP
+
+229        1672 SWAP                     3
+           1674 STORE_FAST              16 (t)
+           1676 STORE_FAST              27 (s)
+           1678 RERAISE                  0
+        >> 1680 SWAP                     2
+           1682 POP_TOP
+
+238        1684 SWAP                     3
+           1686 STORE_FAST              16 (t)
+           1688 STORE_FAST              27 (s)
+           1690 RERAISE                  0
+        >> 1692 SWAP                     2
+           1694 POP_TOP
+
+240        1696 SWAP                     2
+           1698 STORE_FAST              15 (i)
+           1700 RERAISE                  0
+ExceptionTable:
+  656 to 672 -> 1658 [2]
+  786 to 810 -> 1668 [5]
+  814 to 820 -> 1668 [5]
+  974 to 996 -> 1680 [7]
+  1100 to 1140 -> 1692 [4]
+
+Disassembly of <code object <lambda> at 0x00000245396F23F0, file "汇总工具.py", line 214>:
+214           0 RESUME                   0
+              2 LOAD_FAST                0 (x)
+              4 LOAD_CONST               1 ('理想时间')
+              6 BINARY_SUBSCR
+             10 RETURN_VALUE
+
+Disassembly of <code object <genexpr> at 0x00000245396FC4E0, file "汇总工具.py", line 242>:
+              0 COPY_FREE_VARS           1
+
+242           2 RETURN_GENERATOR
+              4 POP_TOP
+              6 RESUME                   0
+              8 LOAD_FAST                0 (.0)
+        >>   10 FOR_ITER                12 (to 38)
+             14 STORE_FAST               1 (g)
+             16 LOAD_FAST                1 (g)
+             18 LOAD_DEREF               2 (avg_gap)
+             20 BINARY_OP               10 (-)
+             24 LOAD_CONST               0 (2)
+             26 BINARY_OP                8 (**)
+             30 YIELD_VALUE              1
+             32 RESUME                   1
+             34 POP_TOP
+             36 JUMP_BACKWARD           14 (to 10)
+        >>   38 END_FOR
+             40 RETURN_CONST             1 (None)
+        >>   42 CALL_INTRINSIC_1         3 (INTRINSIC_STOPITERATION_ERROR)
+             44 RERAISE                  1
+ExceptionTable:
+  6 to 40 -> 42 [0] lasti
+
+Disassembly of <code object <lambda> at 0x00000245396A1DF0, file "汇总工具.py", line 264>:
+264           0 RESUME                   0
+              2 LOAD_FAST                0 (x)
+              4 LOAD_CONST               1 ('时间分钟')
+              6 BINARY_SUBSCR
+             10 LOAD_FAST                0 (x)
+             12 LOAD_CONST               2 ('店铺')
+             14 BINARY_SUBSCR
+             18 BUILD_TUPLE              2
+             20 RETURN_VALUE

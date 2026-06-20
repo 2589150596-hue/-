@@ -1,0 +1,194 @@
+=== parse_filename ===
+varnames: ('basename', 'name', 'serial_match', 'serial', 'shop_match', 'shop', 'temp', 'p', 'parts')
+names: ('os', 'path', 'splitext', 're', 'match', 'group', 'search', 'sub', 'strip', 'split', 'len')
+cellvars: ()
+freevars: ()
+
+--- Bytecode ---
+ 33           0 RESUME                   0
+
+ 35           2 LOAD_GLOBAL              0 (os)
+             12 LOAD_ATTR                2 (path)
+             32 LOAD_ATTR                5 (NULL|self + splitext)
+             52 LOAD_FAST                0 (basename)
+             54 CALL                     1
+             62 LOAD_CONST               1 (0)
+             64 BINARY_SUBSCR
+             68 STORE_FAST               1 (name)
+
+ 37          70 LOAD_GLOBAL              7 (NULL + re)
+             80 LOAD_ATTR                8 (match)
+            100 LOAD_CONST               2 ('^(\\d+)')
+            102 LOAD_FAST                1 (name)
+            104 CALL                     2
+            112 STORE_FAST               2 (serial_match)
+
+ 38         114 LOAD_FAST                2 (serial_match)
+            116 POP_JUMP_IF_FALSE       17 (to 152)
+            118 LOAD_FAST                2 (serial_match)
+            120 LOAD_ATTR               11 (NULL|self + group)
+            140 LOAD_CONST               3 (1)
+            142 CALL                     1
+            150 JUMP_FORWARD             1 (to 154)
+        >>  152 LOAD_FAST                0 (basename)
+        >>  154 STORE_FAST               3 (serial)
+
+ 41         156 LOAD_GLOBAL              7 (NULL + re)
+            166 LOAD_ATTR               12 (search)
+            186 LOAD_CONST               4 ('([\\w一-龥]+(?:专卖店|旗舰店|专营店))')
+            188 LOAD_FAST                1 (name)
+            190 CALL                     2
+            198 STORE_FAST               4 (shop_match)
+
+ 42         200 LOAD_FAST                4 (shop_match)
+            202 POP_JUMP_IF_FALSE       21 (to 246)
+
+ 43         204 LOAD_FAST                4 (shop_match)
+            206 LOAD_ATTR               11 (NULL|self + group)
+            226 LOAD_CONST               3 (1)
+            228 CALL                     1
+            236 STORE_FAST               5 (shop)
+
+ 61         238 LOAD_FAST                3 (serial)
+            240 LOAD_FAST                5 (shop)
+            242 BUILD_TUPLE              2
+            244 RETURN_VALUE
+
+ 46     >>  246 LOAD_GLOBAL              7 (NULL + re)
+            256 LOAD_ATTR               14 (sub)
+            276 LOAD_CONST               5 ('^\\d+[-_]')
+            278 LOAD_CONST               6 ('')
+            280 LOAD_FAST                1 (name)
+            282 CALL                     3
+            290 STORE_FAST               6 (temp)
+
+ 47         292 LOAD_GLOBAL              7 (NULL + re)
+            302 LOAD_ATTR               14 (sub)
+            322 LOAD_CONST               7 ('\\d{4}\\.\\s*\\d+\\.\\s*\\d+')
+            324 LOAD_CONST               6 ('')
+            326 LOAD_FAST                6 (temp)
+            328 CALL                     3
+            336 STORE_FAST               6 (temp)
+
+ 48         338 LOAD_GLOBAL              7 (NULL + re)
+            348 LOAD_ATTR               14 (sub)
+            368 LOAD_CONST               8 ('\\d+\\.\\d+')
+            370 LOAD_CONST               6 ('')
+            372 LOAD_FAST                6 (temp)
+            374 CALL                     3
+            382 STORE_FAST               6 (temp)
+
+ 49         384 LOAD_GLOBAL              7 (NULL + re)
+            394 LOAD_ATTR               14 (sub)
+            414 LOAD_CONST               9 ('\\d+单|\\d+-\\d+单')
+            416 LOAD_CONST               6 ('')
+            418 LOAD_FAST                6 (temp)
+            420 CALL                     3
+            428 STORE_FAST               6 (temp)
+
+ 50         430 LOAD_GLOBAL              7 (NULL + re)
+            440 LOAD_ATTR               14 (sub)
+            460 LOAD_CONST              10 ('^\\d+')
+            462 LOAD_CONST               6 ('')
+            464 LOAD_FAST                6 (temp)
+            466 CALL                     3
+            474 STORE_FAST               6 (temp)
+
+ 51         476 LOAD_GLOBAL              7 (NULL + re)
+            486 LOAD_ATTR               14 (sub)
+            506 LOAD_CONST              11 ('\\d+$')
+            508 LOAD_CONST               6 ('')
+            510 LOAD_FAST                6 (temp)
+            512 CALL                     3
+            520 STORE_FAST               6 (temp)
+
+ 52         522 LOAD_GLOBAL              7 (NULL + re)
+            532 LOAD_ATTR               14 (sub)
+            552 LOAD_CONST              12 ('内部|补数据|新模版')
+            554 LOAD_CONST               6 ('')
+            556 LOAD_FAST                6 (temp)
+            558 CALL                     3
+            566 STORE_FAST               6 (temp)
+
+ 53         568 LOAD_FAST                6 (temp)
+            570 LOAD_ATTR               17 (NULL|self + strip)
+            590 LOAD_CONST              13 ('-_（）() ')
+            592 CALL                     1
+            600 STORE_FAST               6 (temp)
+
+ 54         602 LOAD_GLOBAL              7 (NULL + re)
+            612 LOAD_ATTR               18 (split)
+            632 LOAD_CONST              14 ('[-_]')
+            634 LOAD_FAST                6 (temp)
+            636 CALL                     2
+            644 GET_ITER
+            646 LOAD_FAST_AND_CLEAR      7 (p)
+            648 SWAP                     2
+            650 BUILD_LIST               0
+            652 SWAP                     2
+        >>  654 FOR_ITER                35 (to 728)
+            658 STORE_FAST               7 (p)
+            660 LOAD_FAST                7 (p)
+            662 LOAD_ATTR               17 (NULL|self + strip)
+            682 CALL                     0
+            690 POP_JUMP_IF_TRUE         1 (to 694)
+            692 JUMP_BACKWARD           20 (to 654)
+        >>  694 LOAD_FAST                7 (p)
+            696 LOAD_ATTR               17 (NULL|self + strip)
+            716 CALL                     0
+            724 LIST_APPEND              2
+            726 JUMP_BACKWARD           37 (to 654)
+        >>  728 END_FOR
+            730 STORE_FAST               8 (parts)
+            732 STORE_FAST               7 (p)
+
+ 55         734 LOAD_GLOBAL             21 (NULL + len)
+            744 LOAD_FAST                8 (parts)
+            746 CALL                     1
+            754 LOAD_CONST              15 (2)
+            756 COMPARE_OP              92 (>=)
+            760 POP_JUMP_IF_FALSE        9 (to 780)
+
+ 56         762 LOAD_FAST                8 (parts)
+            764 LOAD_CONST               3 (1)
+            766 BINARY_SUBSCR
+            770 STORE_FAST               5 (shop)
+
+ 61         772 LOAD_FAST                3 (serial)
+            774 LOAD_FAST                5 (shop)
+            776 BUILD_TUPLE              2
+            778 RETURN_VALUE
+
+ 57     >>  780 LOAD_GLOBAL             21 (NULL + len)
+            790 LOAD_FAST                8 (parts)
+            792 CALL                     1
+            800 LOAD_CONST               3 (1)
+            802 COMPARE_OP              40 (==)
+            806 POP_JUMP_IF_FALSE        9 (to 826)
+
+ 58         808 LOAD_FAST                8 (parts)
+            810 LOAD_CONST               1 (0)
+            812 BINARY_SUBSCR
+            816 STORE_FAST               5 (shop)
+
+ 61         818 LOAD_FAST                3 (serial)
+            820 LOAD_FAST                5 (shop)
+            822 BUILD_TUPLE              2
+            824 RETURN_VALUE
+
+ 60     >>  826 LOAD_CONST               6 ('')
+            828 STORE_FAST               5 (shop)
+
+ 61         830 LOAD_FAST                3 (serial)
+            832 LOAD_FAST                5 (shop)
+            834 BUILD_TUPLE              2
+            836 RETURN_VALUE
+        >>  838 SWAP                     2
+            840 POP_TOP
+
+ 54         842 SWAP                     2
+            844 STORE_FAST               7 (p)
+            846 RERAISE                  0
+ExceptionTable:
+  650 to 690 -> 838 [2]
+  694 to 728 -> 838 [2]
