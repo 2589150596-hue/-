@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>补单汇总工具</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>补单汇总工具</h1>
+    <span class="badge">Web</span>
+  </header>
+
+  <!-- 上传区 -->
+  <section class="card upload-zone" id="uploadZone">
+    <div class="upload-inner">
+      <div class="upload-icon">&#128194;</div>
+      <p>拖拽 .xlsx / .xls 文件到此处</p>
+      <p class="hint">或点击选择文件（支持多选）</p>
+      <input type="file" id="fileInput" multiple accept=".xlsx,.xls" hidden>
+    </div>
+    <div id="fileList" class="file-list"></div>
+  </section>
+
+  <!-- 参数设置 -->
+  <section class="card config">
+    <div class="config-row">
+      <label>开始时间 <input type="time" id="startTime" value="08:00"></label>
+      <label>结束时间 <input type="time" id="endTime" value="23:00"></label>
+      <label>刷手数量 <input type="number" id="numWorkers" value="1" min="1" max="20" style="width:70px"></label>
+      <label>最小间隔(分) <input type="number" id="minInterval" value="20" min="1" max="120" style="width:70px"></label>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btnProcess" disabled>开始处理</button>
+      <button class="btn btn-success" id="btnDownload" disabled>下载 Excel</button>
+      <button class="btn btn-danger" id="btnClear">清空</button>
+    </div>
+    <div id="statusBar" class="status-bar">就绪 - 请先上传 Excel 文件</div>
+  </section>
+
+  <!-- 结果区 -->
+  <section id="resultArea" class="card result" style="display:none">
+    <div class="tabs">
+      <button class="tab active" data-tab="summary">汇总表</button>
+      <button class="tab" data-tab="shop">店铺统计</button>
+      <button class="tab" data-tab="file">按文件统计</button>
+      <button class="tab" data-tab="customer">按客户统计</button>
+      <button class="tab" data-tab="anomaly">异常报告</button>
+    </div>
+    <div class="stats-row">
+      <span>总单量: <strong id="statOrders">0</strong></span>
+      <span>文件数: <strong id="statFiles">0</strong></span>
+      <span>客户数: <strong id="statCustomers">0</strong></span>
+      <span>店铺数: <strong id="statShops">0</strong></span>
+    </div>
+    <div class="table-wrap">
+      <table id="dataTable"><thead><tr></tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+</div>
+<script src="/static/app.js"></script>
+</body>
+</html>

@@ -25,3 +25,7 @@ pyinstxtractor.py
 # OS
 Thumbs.db
 Desktop.ini
+
+# Webapp runtime temp
+webapp/uploads/
+webapp/outputs/
