@@ -33,6 +33,14 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24).hex()
 
 
+@app.after_request
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    return response
+
+
 def to_json_safe(df):
     """将DataFrame转换为JSON安全的dict列表"""
     records = df.fillna('').to_dict(orient='records')

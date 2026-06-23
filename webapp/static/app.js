@@ -1,3 +1,4 @@
+const API_BASE = 'https://budan-huizong.onrender.com';
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => document.querySelectorAll(s);
 
@@ -18,7 +19,7 @@ $('#btnRefreshFiles').addEventListener('click', refreshFileList);
 $('#btnRefreshSummaries').addEventListener('click', refreshSummaries);
 
 // SSE 实时刷新 + 提示音
-const evtSource = new EventSource('/api/file-events');
+const evtSource = new EventSource(API_BASE + '/api/file-events');
 let sseFirstLoad = true;
 evtSource.onmessage = () => {
     refreshFileList(); refreshSummaries();
@@ -41,7 +42,7 @@ function playBeep() {
 // ========== 文件列表 ==========
 async function refreshFileList() {
     try {
-        const res = await fetch('/api/files');
+        const res = await fetch(API_BASE + '/api/files');
         const data = await res.json();
         allServerFiles = data.files || [];
         renderFileTable();
@@ -74,7 +75,7 @@ function renderFileTable() {
                 <td><input type="checkbox" class="file-check" data-idx="${f._idx}" ${f._checked ? 'checked' : ''}></td>
                 <td>${f.filename} ${badge}</td>
                 <td style="color:#999">${timeStr}</td>
-                <td><a href="/api/download-file/${f.session_id}/${encFn}" class="btn-op" title="下载">&#128229;</a>
+                <td><a href="${API_BASE}/api/download-file/${f.session_id}/${encFn}" class="btn-op" title="下载">&#128229;</a>
                     <span class="btn-op btn-del" data-sid="${f.session_id}" data-fn="${f.filename}" title="删除">&#128465;</span></td>
             </tr>`;
         }
@@ -90,7 +91,7 @@ function renderFileTable() {
         btn.addEventListener('click', async (e) => {
             e.stopPropagation();
             if (!confirm(`确定删除 "${btn.dataset.fn}" 吗？`)) return;
-            await fetch('/api/delete-file', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:btn.dataset.sid,filename:btn.dataset.fn})});
+            await fetch(API_BASE + '/api/delete-file', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:btn.dataset.sid,filename:btn.dataset.fn})});
             refreshFileList();
         });
     });
@@ -122,7 +123,7 @@ $('#btnDeselectAll').addEventListener('click', () => { allServerFiles.forEach(f 
 $('#btnBatchDownload').addEventListener('click', async () => {
     const sel = allServerFiles.filter(f => f._checked).map(f => ({session_id:f.session_id,filename:f.filename}));
     if (!sel.length) { alert('请先勾选文件'); return; }
-    const res = await fetch('/api/batch-download', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({files:sel})});
+    const res = await fetch(API_BASE + '/api/batch-download', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({files:sel})});
     if (res.ok) { const b=await res.blob(); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='批量下载.zip'; a.click(); }
     else alert('下载失败');
 });
@@ -131,7 +132,7 @@ $('#btnBatchDelete').addEventListener('click', async () => {
     const sel = allServerFiles.filter(f => f._checked).map(f => ({session_id:f.session_id,filename:f.filename}));
     if (!sel.length) { alert('请先勾选文件'); return; }
     if (!confirm(`确定删除选中的 ${sel.length} 个文件吗？`)) return;
-    await fetch('/api/batch-delete', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({files:sel})});
+    await fetch(API_BASE + '/api/batch-delete', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({files:sel})});
     refreshFileList();
 });
 
@@ -158,7 +159,7 @@ async function doCustomerUpload() {
     if (!n) return;
     showMsg(`正在上传 ${n} 个文件...`, 'processing');
     $('#btnCustomerUpload').disabled = true;
-    const res = await fetch('/api/upload', {method:'POST',body:fd});
+    const res = await fetch(API_BASE + '/api/upload', {method:'POST',body:fd});
     const data = await res.json();
     if (data.error) { showMsg(data.error, 'error'); alert('上传失败：'+data.error); }
     else { showMsg(`上传成功：${data.count} 个文件`, 'done'); alert(`上传成功！\n任务日期：${$('#taskDate').value}\n共 ${data.count} 个文件`); customerFileInput.value = ''; }
@@ -173,7 +174,7 @@ $('#btnProcess').addEventListener('click', async () => {
     if (!sel.length) { alert('请先勾选文件'); return; }
     setStatus(`正在处理 ${sel.length} 个文件...`, 'processing');
     $('#btnProcess').disabled = true; $('#btnDownload').disabled = true;
-    const res = await fetch('/api/process', {method:'POST',headers:{'Content-Type':'application/json'},
+    const res = await fetch(API_BASE + '/api/process', {method:'POST',headers:{'Content-Type':'application/json'},
         body:JSON.stringify({session_id:sessionId, start_time:$('#startTime').value||'08:00', end_time:$('#endTime').value||'23:00',
             num_workers:parseInt($('#numWorkers').value)||1, min_interval:parseFloat($('#minInterval').value)||20, selected_files:sel})});
     const data = await res.json();
@@ -199,13 +200,13 @@ $('#btnProcess').addEventListener('click', async () => {
 
 // ========== 下载最新汇总 ==========
 $('#btnDownload').addEventListener('click', () => {
-    if (currentTaskName) window.open('/api/download-summary/' + encodeURIComponent(currentTaskName), '_blank');
+    if (currentTaskName) window.open(API_BASE + '/api/download-summary/' + encodeURIComponent(currentTaskName), '_blank');
 });
 
 // ========== 汇总历史 ==========
 async function refreshSummaries() {
     try {
-        const res = await fetch('/api/summaries');
+        const res = await fetch(API_BASE + '/api/summaries');
         const data = await res.json();
         allSummaries = data.summaries || [];
         renderSummaryTable();
@@ -238,7 +239,7 @@ function renderSummaryTable() {
                 <td><input type="checkbox" class="sum-check" data-idx="${s._idx}" ${s._checked ? 'checked' : ''}></td>
                 <td>${s.filename} <span style="color:#999;font-size:11px">(${sizeStr})</span></td>
                 <td style="color:#999">${timeStr}</td>
-                <td><a href="/api/download-summary/${encFn}" class="btn-op" title="下载">&#128229;</a>
+                <td><a href="${API_BASE}/api/download-summary/${encFn}" class="btn-op" title="下载">&#128229;</a>
                     <span class="btn-op btn-del" data-fn="${s.filename}" title="删除">&#128465;</span></td>
             </tr>`;
         }
@@ -254,7 +255,7 @@ function renderSummaryTable() {
         btn.addEventListener('click', async (e) => {
             e.stopPropagation();
             if (!confirm(`确定删除 "${btn.dataset.fn}" 吗？`)) return;
-            await fetch('/api/delete-summary', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:btn.dataset.fn})});
+            await fetch(API_BASE + '/api/delete-summary', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filename:btn.dataset.fn})});
             refreshSummaries();
         });
     });
@@ -275,13 +276,13 @@ $('#btnDeselectAllSum').addEventListener('click', () => { allSummaries.forEach(s
 $('#btnBatchDownloadSum').addEventListener('click', () => {
     const sel = allSummaries.filter(s => s._checked);
     if (!sel.length) { alert('请先勾选汇总表'); return; }
-    sel.forEach(s => window.open('/api/download-summary/' + encodeURIComponent(s.filename), '_blank'));
+    sel.forEach(s => window.open(API_BASE + '/api/download-summary/' + encodeURIComponent(s.filename), '_blank'));
 });
 $('#btnBatchDeleteSum').addEventListener('click', async () => {
     const sel = allSummaries.filter(s => s._checked).map(s => s.filename);
     if (!sel.length) { alert('请先勾选汇总表'); return; }
     if (!confirm(`确定删除选中的 ${sel.length} 个汇总表吗？`)) return;
-    await fetch('/api/batch-delete-summaries', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filenames:sel})});
+    await fetch(API_BASE + '/api/batch-delete-summaries', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({filenames:sel})});
     refreshSummaries();
 });
 
