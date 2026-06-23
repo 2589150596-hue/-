@@ -33,6 +33,16 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24).hex()
 
 
+@app.before_request
+def handle_options():
+    if request.method == 'OPTIONS':
+        resp = app.make_default_options_response()
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        resp.headers['Access-Control-Allow-Methods'] = 'GET, POST, DELETE, OPTIONS'
+        resp.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+        return resp
+
+
 @app.after_request
 def add_cors_headers(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
