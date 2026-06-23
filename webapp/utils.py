@@ -387,10 +387,11 @@ def read_excel_with_fallback(filepath):
 # ========== 异常检测 ==========
 
 def detect_abnormal_files(filepaths):
-    """检测异常文件：重复内容、缺少关键列、无有效数据"""
+    """检测异常文件：重复内容、缺少关键列、无有效数据、行缺失"""
     file_hashes = {}
     duplicates = []
     invalid = []
+    warnings = []
     for filepath in filepaths:
         basename = os.path.basename(filepath)
         try:
@@ -398,15 +399,50 @@ def detect_abnormal_files(filepaths):
             if len(df) == 0:
                 invalid.append({'file': basename, 'reason': '空表（无数据行）'})
                 continue
-            has_shop = any('店铺名称' == str(c) or ('客户' in str(c) and '店铺' in str(c)) or str(c) == '客户(不填)' for c in df.columns)
-            has_qty = any(str(c) in ['补单数量', '单量', '数量'] for c in df.columns)
-            if not has_shop:
+            # 找到实际的店铺列和单量列
+            shop_col_name = None
+            for c in df.columns:
+                if '店铺名称' == str(c) or ('客户' in str(c) and '店铺' in str(c)) or str(c) == '客户(不填)':
+                    shop_col_name = c
+                    break
+            qty_col = None
+            for c in df.columns:
+                if str(c) in ['补单数量', '单量', '数量']:
+                    qty_col = c
+                    break
+            if shop_col_name is None:
                 invalid.append({'file': basename, 'reason': '缺少店铺列'})
                 continue
-            if not has_qty:
+            if qty_col is None:
                 invalid.append({'file': basename, 'reason': '缺少单量列'})
                 continue
-            qty_col = None
+            # 检查列是否有实际数据
+            shop_has_data = df[shop_col_name].notna().sum() > 0
+            qty_has_data = df[qty_col].notna().sum() > 0
+            if not shop_has_data:
+                invalid.append({'file': basename, 'reason': '店铺列全为空'})
+                continue
+            if not qty_has_data:
+                invalid.append({'file': basename, 'reason': '单量列全为空'})
+                continue
+            # 检查是否有行缺少下单数量或店铺名称
+            # 跳过汇总行：店铺名和商品标题同时为空的视为汇总/小计行
+            title_col = None
+            for c in df.columns:
+                if str(c) == '商品标题':
+                    title_col = c
+                    break
+            qty_empty = df[qty_col].isna()
+            shop_empty = df[shop_col_name].isna()
+            title_empty = df[title_col].isna() if title_col else pd.Series([False] * len(df))
+            is_summary_row = shop_empty & title_empty  # 汇总行：只有数字没有店铺和标题
+            # 只统计非汇总行中缺失的数据
+            qty_missing = (qty_empty & ~shop_empty & ~is_summary_row).sum()
+            shop_missing = (shop_empty & ~qty_empty & ~is_summary_row).sum()
+            if qty_missing > 0:
+                warnings.append({'file': basename, 'reason': f'有 {qty_missing} 行缺少下单数量（已有店铺名）'})
+            if shop_missing > 0:
+                warnings.append({'file': basename, 'reason': f'有 {shop_missing} 行缺少店铺名称（已有数量）'})
             for c in df.columns:
                 if str(c) in ['补单数量', '单量', '数量']:
                     qty_col = c
@@ -426,7 +462,7 @@ def detect_abnormal_files(filepaths):
                 file_hashes[content_hash] = basename
         except Exception as e:
             invalid.append({'file': basename, 'reason': f'读取失败: {e}'})
-    return {'duplicates': duplicates, 'invalid': invalid}
+    return {'duplicates': duplicates, 'invalid': invalid, 'warnings': warnings}
 
 # ========== 调度算法 ==========
 
@@ -582,6 +618,30 @@ def compute_stats(data, shop_col, qty_col, customer_from_file):
 
 # ========== Excel 导出 ==========
 
+def _embed_image_in_cell(ws, img, col_idx, row_idx):
+    """将图片锚定到单元格内并居中偏移"""
+    try:
+        col_letter = get_column_letter(col_idx)
+        col_w = ws.column_dimensions.get(col_letter)
+        col_w_ch = col_w.width if col_w and col_w.width else 14
+        row_h_pt = ws.row_dimensions[row_idx].height if ws.row_dimensions[row_idx].height else 65
+        offset_x = int(max(0, (col_w_ch * 7.5 - img.width) / 2) * 12700)
+        offset_y = int(max(0, (row_h_pt * 1.33 - img.height) / 2) * 12700)
+
+        from openpyxl.drawing.spreadsheet_drawing import AnchorMarker, TwoCellAnchor
+        from_m = AnchorMarker(col=col_idx - 1, colOff=offset_x, row=row_idx - 1, rowOff=offset_y)
+        to_m = AnchorMarker(col=col_idx, colOff=0, row=row_idx, rowOff=0)
+        img.anchor = TwoCellAnchor('oneCell', _from=from_m, to=to_m)
+        ws.add_image(img)
+    except Exception:
+        # 图片嵌入失败时使用简单锚定作为后备
+        try:
+            cell_addr = f"{col_letter}{row_idx}"
+            ws.add_image(img, cell_addr)
+        except Exception:
+            pass
+
+
 def generate_output_excel(output_path, result_df, shop_stats, df_file_stats, df_customer_stats, df_shop_stats,
                           file_images=None, file_std_images=None):
     """生成最终的汇总Excel文件，含图片插入和格式美化"""
@@ -675,12 +735,11 @@ def generate_output_excel(output_path, result_df, shop_stats, df_file_stats, df_
                     img = XLImage(io.BytesIO(images[img_id]))
                     img.width = 70
                     img.height = 70
-                    cell_addr = f"{get_column_letter(col_idx)}{excel_row_idx}"
-                    ws.add_image(img, cell_addr)
+                    _embed_image_in_cell(ws, img, col_idx, excel_row_idx)
                     inserted += 1
                     has_img = True
-                except Exception:
-                    pass
+                except Exception as e:
+                    print(f"  图片插入警告: {e}")
             elif isinstance(cell_value, str) and 'DISPIMG' in cell_value:
                 cell.value = None
                 has_img = True
@@ -695,11 +754,10 @@ def generate_output_excel(output_path, result_df, shop_stats, df_file_stats, df_
                         img = XLImage(io.BytesIO(img_data))
                         img.width = 70
                         img.height = 70
-                        cell_addr = f"{get_column_letter(col_idx)}{excel_row_idx}"
-                        ws.add_image(img, cell_addr)
+                        _embed_image_in_cell(ws, img, col_idx, excel_row_idx)
                         inserted += 1
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        print(f"  图片插入警告: {e}")
 
     # ========== 列宽和对齐 ==========
     col_widths = {

@@ -13,31 +13,55 @@
     <span class="badge">Web</span>
   </header>
 
-  <!-- 上传区 -->
-  <section class="card upload-zone" id="uploadZone">
-    <div class="upload-inner">
-      <div class="upload-icon">&#128194;</div>
-      <p>拖拽 .xlsx / .xls 文件到此处</p>
-      <p class="hint">或点击选择文件（支持多选）</p>
-      <input type="file" id="fileInput" multiple accept=".xlsx,.xls" hidden>
+  <!-- 顾客上传区 -->
+  <section class="card">
+    <h3 class="section-title">顾客上传</h3>
+    <div class="customer-upload">
+      <label class="input-label">顾客名称</label>
+      <input type="text" id="customerName" placeholder="输入顾客名称（必填）" class="input-text">
+      <label class="input-label">任务日期</label>
+      <input type="date" id="taskDate" class="input-text" style="width:150px">
+      <div class="upload-zone-sm" id="customerUploadZone">
+        <div class="upload-inner-sm"><span class="upload-icon-sm">&#128194;</span><span>拖拽或点击选择文件</span></div>
+        <input type="file" id="customerFileInput" multiple accept=".xlsx,.xls" hidden>
+      </div>
+      <button class="btn btn-primary" id="btnCustomerUpload">上传</button>
     </div>
-    <div id="fileList" class="file-list"></div>
+    <div id="customerUploadMsg" class="upload-msg"></div>
+  </section>
+
+  <!-- 文件选择区 -->
+  <section class="card">
+    <h3 class="section-title">选择汇总文件 <button class="btn btn-sm" id="btnRefreshFiles">刷新列表</button></h3>
+    <div class="select-actions">
+      <button class="btn btn-sm" id="btnSelectAll">全选</button>
+      <button class="btn btn-sm" id="btnDeselectAll">取消全选</button>
+      <button class="btn btn-sm" id="btnBatchDownload" style="color:#1890ff">批量下载</button>
+      <button class="btn btn-sm" id="btnBatchDelete" style="color:#ff4d4f">批量删除</button>
+      <span id="fileCount" class="count-hint">-</span>
+    </div>
+    <div class="file-select-table-wrap">
+      <table id="fileSelectTable">
+        <thead><tr><th style="width:40px"><input type="checkbox" id="checkAll"></th><th>文件名</th><th>上传时间</th><th style="width:100px">操作</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
   </section>
 
   <!-- 参数设置 -->
   <section class="card config">
+    <h3 class="section-title">处理参数</h3>
     <div class="config-row">
       <label>开始时间 <input type="time" id="startTime" value="08:00"></label>
       <label>结束时间 <input type="time" id="endTime" value="23:00"></label>
       <label>刷手数量 <input type="number" id="numWorkers" value="1" min="1" max="20" style="width:70px"></label>
-      <label>最小间隔(分) <input type="number" id="minInterval" value="20" min="1" max="120" style="width:70px"></label>
+      <label>最小间隔(分) <input type="number" id="minInterval" value="0" min="0" max="120" style="width:70px"></label>
     </div>
     <div class="btn-row">
       <button class="btn btn-primary" id="btnProcess" disabled>开始处理</button>
-      <button class="btn btn-success" id="btnDownload" disabled>下载 Excel</button>
-      <button class="btn btn-danger" id="btnClear">清空</button>
+      <button class="btn btn-success" id="btnDownload" disabled>下载最新汇总表</button>
     </div>
-    <div id="statusBar" class="status-bar">就绪 - 请先上传 Excel 文件</div>
+    <div id="statusBar" class="status-bar">就绪 - 请先勾选要处理的文件</div>
   </section>
 
   <!-- 结果区 -->
@@ -57,6 +81,24 @@
     </div>
     <div class="table-wrap">
       <table id="dataTable"><thead><tr></tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+  <!-- 汇总历史 -->
+  <section class="card">
+    <h3 class="section-title">汇总历史 <button class="btn btn-sm" id="btnRefreshSummaries">刷新</button></h3>
+    <div class="select-actions">
+      <button class="btn btn-sm" id="btnSelectAllSum">全选</button>
+      <button class="btn btn-sm" id="btnDeselectAllSum">取消全选</button>
+      <button class="btn btn-sm" id="btnBatchDownloadSum" style="color:#1890ff">批量下载</button>
+      <button class="btn btn-sm" id="btnBatchDeleteSum" style="color:#ff4d4f">批量删除</button>
+      <span id="sumCount" class="count-hint">-</span>
+    </div>
+    <div class="file-select-table-wrap" style="max-height:400px">
+      <table id="summaryTable">
+        <thead><tr><th style="width:40px"><input type="checkbox" id="checkAllSum"></th><th>文件名</th><th>生成时间</th><th style="width:100px">操作</th></tr></thead>
+        <tbody></tbody>
+      </table>
     </div>
   </section>
 </div>
